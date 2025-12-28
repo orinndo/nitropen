@@ -22,7 +22,10 @@
 </head>
 <body>
   <h1>ニトロペン（舌下投与）音声ガイド</h1>
-  <p class="sub">1枚のQRから開くページ想定（iPhoneの自動再生制限のため、ボタンで再生します）。</p>
+  <p class="sub">
+    ※ 必ず <b>GitHub Pages（https://◯◯.github.io/…）</b> のURLで開いてください。<br>
+    iPhoneでは自動再生できないため、下の<b>再生ボタン</b>を押してください。
+  </p>
 
   <div class="panel">
     <div class="row">
@@ -46,20 +49,40 @@
 
     <div class="status" id="status">待機中 / Ready</div>
 
-    <audio id="audio" preload="auto"></audio>
+    <!-- iPhone Safari 対策 -->
+    <audio id="audio"
+           preload="metadata"
+           playsinline
+           controls
+           style="width:100%; margin-top:10px;">
+      <source id="audioSrc" src="" type="audio/mp4">
+    </audio>
 
     <div class="note">
-      ※ 画面を見せながら「選択 → 再生」でも使えます。<br>
-      Tip: You can tap Next/Prev and Play quickly during the procedure.
+      再生されない場合は、下のコントロール（▶︎）からも再生できます。
     </div>
   </div>
 
 <script>
-const DATA = [{"id": 1, "jp": "これからニトロペン（ニトログリセリン）を舌の下に入れます。心臓の血管を広げる薬です。", "en": "We're going to put a medicine under your tongue. It helps widen the blood vessels in your heart.", "src": "audio/nitro01.m4a"}, {"id": 2, "jp": "これは舌下錠です。舌の下で溶けるので、飲み込まないでください。", "en": "This is a sublingual tablet that dissolves under your tongue, so please don't swallow it.", "src": "audio/nitro02.m4a"}, {"id": 3, "jp": "溶けにくい場合は、舌を少し動かしても大丈夫です。噛んだり、かみ砕いたりしないでください。", "en": "If it's hard to dissolve, you can lick it like a candy to help it dissolved, but please don't chew or bite it.", "src": "audio/nitro03.m4a"}, {"id": 4, "jp": "この薬は血管を広げます。軽い頭痛を感じる方がいますが、心配いりません。", "en": "This medicine can also widen the blood vessels in your brain, so you may feel a light headache, but it's nothing to worry about.", "src": "audio/nitro04.m4a"}, {"id": 5, "jp": "多くの方は軽い頭痛程度です。もし頭痛が強くなったら、すぐに教えてください。", "en": "Most patients feel just a mild headache, but if you feel the headache is getting worse, please tell us right away.", "src": "audio/nitro05.m4a"}, {"id": 6, "jp": "今からマスクを少し下げます。", "en": "Let me lower your mask now.", "src": "audio/nitro06.m4a"}, {"id": 7, "jp": "口を開けて、舌を上げてください。", "en": "Please open your mouth and lift your tongue.", "src": "audio/nitro07.m4a"}, {"id": 8, "jp": "錠剤を飲み込まないでください。", "en": "Please don't swallow the tablet.", "src": "audio/nitro08.m4a"}, {"id": 9, "jp": "飴のように、舌の上で溶かしてください。", "en": "Let it dissolve like a candy on your tongue.", "src": "audio/nitro09.m4a"}, {"id": 10, "jp": "薬が溶けたら教えてください。", "en": "Please let me know when the medicine has dissolved.", "src": "audio/nitro10.m4a"}, {"id": 11, "jp": "溶けましたか？まだ舌の下に残っていますか？", "en": "Has it dissolved? Is it still there under your tongue?", "src": "audio/nitro11.m4a"}];
+const DATA = [
+  {id:1, jp:"これからニトロペン（ニトログリセリン）を舌の下に入れます。心臓の血管を広げる薬です。", en:"We're going to put a medicine under your tongue. It helps widen the blood vessels in your heart.", src:"audio/nitro01.m4a"},
+  {id:2, jp:"これは舌下錠です。舌の下で溶けるので、飲み込まないでください。", en:"This is a sublingual tablet that dissolves under your tongue, so please don't swallow it.", src:"audio/nitro02.m4a"},
+  {id:3, jp:"溶けにくい場合は、舌を少し動かしても大丈夫です。噛んだり、かみ砕いたりしないでください。", en:"If it's hard to dissolve, you can lick it like a candy to help it dissolve, but please don't chew or bite it.", src:"audio/nitro03.m4a"},
+  {id:4, jp:"この薬は血管を広げます。軽い頭痛を感じる方がいますが、心配いりません。", en:"This medicine can widen the blood vessels, so you may feel a light headache, but it's nothing to worry about.", src:"audio/nitro04.m4a"},
+  {id:5, jp:"多くの方は軽い頭痛程度です。もし頭痛が強くなったら、すぐに教えてください。", en:"Most patients feel just a mild headache. If it gets worse, please tell us right away.", src:"audio/nitro05.m4a"},
+  {id:6, jp:"今からマスクを少し下げます。", en:"Let me lower your mask now.", src:"audio/nitro06.m4a"},
+  {id:7, jp:"口を開けて、舌を上げてください。", en:"Please open your mouth and lift your tongue.", src:"audio/nitro07.m4a"},
+  {id:8, jp:"錠剤を飲み込まないでください。", en:"Please don't swallow the tablet.", src:"audio/nitro08.m4a"},
+  {id:9, jp:"飴のように、舌の上で溶かしてください。", en:"Let it dissolve like a candy on your tongue.", src:"audio/nitro09.m4a"},
+  {id:10, jp:"薬が溶けたら教えてください。", en:"Please let me know when the medicine has dissolved.", src:"audio/nitro10.m4a"},
+  {id:11, jp:"溶けましたか？まだ舌の下に残っていますか？", en:"Has it dissolved? Is it still there under your tongue?", src:"audio/nitro11.m4a"}
+];
+
 const sel = document.getElementById('sel');
 const jp = document.getElementById('jp');
 const en = document.getElementById('en');
 const audio = document.getElementById('audio');
+const audioSrc = document.getElementById('audioSrc');
 const status = document.getElementById('status');
 
 const playBtn = document.getElementById('play');
@@ -68,64 +91,44 @@ const replayBtn = document.getElementById('replay');
 const prevBtn = document.getElementById('prev');
 const nextBtn = document.getElementById('next');
 
-DATA.forEach((item) => {
+DATA.forEach(item => {
   const opt = document.createElement('option');
   opt.value = item.id;
   opt.textContent = String(item.id).padStart(2,'0') + ". " + item.jp;
   sel.appendChild(opt);
 });
 
-function load(id) {
+function load(id){
   const item = DATA.find(x => x.id === Number(id));
   jp.textContent = item.jp;
   en.textContent = item.en;
-  audio.src = item.src;
+  audioSrc.src = item.src; // sourceにセット
+  audio.load();            // ★iPhone Safari 必須
   status.textContent = "待機中 / Ready";
   sel.value = String(item.id);
 }
 
 sel.addEventListener('change', e => load(e.target.value));
 
-playBtn.addEventListener('click', async () => {
-  try {
+async function play(){
+  try{
     await audio.play();
     status.textContent = "再生中 / Playing";
-  } catch (e) {
-    status.textContent = "再生できませんでした / Couldn't play";
+  }catch(e){
+    status.textContent = "再生できませんでした";
   }
-});
+}
 
-pauseBtn.addEventListener('click', () => {
-  audio.pause();
-  status.textContent = "一時停止 / Paused";
-});
+playBtn.addEventListener('click', play);
+pauseBtn.addEventListener('click', () => { audio.pause(); status.textContent = "一時停止 / Paused"; });
+replayBtn.addEventListener('click', async () => { audio.currentTime = 0; await play(); });
 
-replayBtn.addEventListener('click', async () => {
-  try {
-    audio.currentTime = 0;
-    await audio.play();
-    status.textContent = "再生中 / Playing";
-  } catch (e) {
-    status.textContent = "再生できませんでした / Couldn't play";
-  }
-});
+prevBtn.addEventListener('click', () => load(Math.max(1, Number(sel.value)-1)));
+nextBtn.addEventListener('click', () => load(Math.min(DATA.length, Number(sel.value)+1)));
 
-prevBtn.addEventListener('click', () => {
-  const cur = Number(sel.value);
-  const next = Math.max(1, cur - 1);
-  load(next);
-});
+audio.addEventListener('ended', () => status.textContent = "再生終了 / Finished");
 
-nextBtn.addEventListener('click', () => {
-  const cur = Number(sel.value);
-  const next = Math.min(DATA.length, cur + 1);
-  load(next);
-});
-
-audio.addEventListener('ended', () => {
-  status.textContent = "再生終了 / Finished";
-});
-
+// 初期化
 load(1);
 </script>
 </body>

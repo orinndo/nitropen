@@ -1,135 +1,89 @@
 <!doctype html>
 <html lang="ja">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>ニトロペン（舌下投与）Audio Guide</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ニトロペン舌下投与</title>
 <style>
-  body { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Segoe UI", sans-serif; margin: 18px; line-height: 1.6; }
-  h1 { margin: 0 0 6px; font-size: 22px; }
-  .sub { margin: 0 0 14px; color: #555; font-size: 14px; }
-  .panel { border: 1px solid #ddd; border-radius: 14px; padding: 14px; background: #fafafa; max-width: 820px; }
-  .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
-  select { font-size: 16px; padding: 10px 12px; border-radius: 12px; border: 1px solid #ccc; background: #fff; min-width: 240px; }
-  button { font-size: 18px; padding: 12px 16px; border-radius: 12px; border: 1px solid #ccc; background: #fff; }
-  .label { font-size: 12px; color:#666; margin: 12px 0 6px; }
-  .jp { font-size: 18px; font-weight: 700; margin: 0; }
-  .en { margin: 8px 0 0; font-size: 16px; }
-  .status { margin-top: 10px; color:#444; }
-  .note { font-size: 12px; color:#666; margin-top: 10px; }
-  .badge { display:inline-block; font-size:12px; padding: 2px 8px; border-radius: 999px; border:1px solid #ddd; background:#fff; color:#444; }
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Segoe UI",sans-serif;
+background:linear-gradient(180deg,#f7fbff,#eef6ff);color:#0f172a;}
+.header{padding:18px 16px 10px;}
+.frame-title{border:2px solid #38bdf8;padding:14px 16px;border-radius:14px;background:#f8fcff;text-align:center;}
+.frame-title h1{margin:0;font-size:20px;}
+.frame-title p{margin:6px 0 0;font-size:14px;color:#475569;}
+.note{font-size:12px;color:#475569;margin:12px 16px;}
+.main{margin:0 16px 24px;padding:16px;background:#fff;border-radius:18px;box-shadow:0 8px 18px rgba(15,23,42,.08);}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+select{flex:1;max-width:100%;font-size:16px;padding:10px 36px 10px 12px;border-radius:12px;border:1px solid #cbd5f5;
+overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+button{font-size:15px;padding:10px 14px;border-radius:12px;border:1px solid #cbd5f5;background:#eff6ff;}
+.label{margin-top:14px;font-size:13px;color:#475569;}
+.jp{font-size:18px;font-weight:600;margin-top:6px;}
+.en{font-size:16px;margin-top:4px;}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
+audio{width:100%;margin-top:10px;}
+.status{margin-top:8px;font-size:13px;color:#475569;}
 </style>
 </head>
 <body>
-  <h1>ニトロペン（舌下投与）音声ガイド</h1>
-  <p class="sub">
-    ※ 必ず <b>GitHub Pages（https://◯◯.github.io/…）</b> のURLで開いてください。<br>
-    iPhoneでは自動再生できないため、下の<b>再生ボタン</b>を押してください。
-  </p>
-
-  <div class="panel">
-    <div class="row">
-      <span class="badge">ステップ選択</span>
-      <select id="sel"></select>
-      <button id="prev">← 前</button>
-      <button id="next">次 →</button>
-    </div>
-
-    <div class="label">日本語（内容）</div>
-    <p class="jp" id="jp"></p>
-
-    <div class="label">English (Script)</div>
-    <p class="en" id="en"></p>
-
-    <div class="row" style="margin-top:12px;">
-      <button id="play">▶︎ 再生 / Play</button>
-      <button id="pause">⏸ 一時停止 / Pause</button>
-      <button id="replay">↻ もう一度 / Replay</button>
-    </div>
-
-    <div class="status" id="status">待機中 / Ready</div>
-
-    <!-- iPhone Safari 対策 -->
-    <audio id="audio"
-           preload="metadata"
-           playsinline
-           controls
-           style="width:100%; margin-top:10px;">
-      <source id="audioSrc" src="" type="audio/mp4">
-    </audio>
-
-    <div class="note">
-      再生されない場合は、下のコントロール（▶︎）からも再生できます。
-    </div>
+<div class="header">
+  <div class="frame-title">
+    <h1>ニトロペン舌下投与</h1>
+    <p>English Audio Guide</p>
   </div>
-
+</div>
+<p class="note">※ iPhone / iPad / Android で再生できます。最初は「再生」を押してください。</p>
+<div class="main">
+  <div class="row">
+    <select id="sel"></select>
+    <button id="prev">← 前</button>
+    <button id="next">次 →</button>
+  </div>
+  <div class="label">日本語（内容）</div>
+  <div class="jp" id="jp"></div>
+  <div class="label">English (Script)</div>
+  <div class="en" id="en"></div>
+  <div class="controls">
+    <button id="play">▶︎ 再生</button>
+    <button id="pause">⏸ 一時停止</button>
+    <button id="replay">↻ もう一度</button>
+  </div>
+  <div class="status" id="status">待機中 / Ready</div>
+  <audio id="player" controls></audio>
+</div>
 <script>
-const DATA = [
-  {id:1, jp:"これからニトロペン（ニトログリセリン）を舌の下に入れます。心臓の血管を広げる薬です。", en:"We're going to put a medicine under your tongue. It helps widen the blood vessels in your heart.", src:"audio/nitro01.m4a"},
-  {id:2, jp:"これは舌下錠です。舌の下で溶けるので、飲み込まないでください。", en:"This is a sublingual tablet that dissolves under your tongue, so please don't swallow it.", src:"audio/nitro02.m4a"},
-  {id:3, jp:"溶けにくい場合は、舌を少し動かしても大丈夫です。噛んだり、かみ砕いたりしないでください。", en:"If it's hard to dissolve, you can lick it like a candy to help it dissolve, but please don't chew or bite it.", src:"audio/nitro03.m4a"},
-  {id:4, jp:"この薬は血管を広げます。軽い頭痛を感じる方がいますが、心配いりません。", en:"This medicine can widen the blood vessels, so you may feel a light headache, but it's nothing to worry about.", src:"audio/nitro04.m4a"},
-  {id:5, jp:"多くの方は軽い頭痛程度です。もし頭痛が強くなったら、すぐに教えてください。", en:"Most patients feel just a mild headache. If it gets worse, please tell us right away.", src:"audio/nitro05.m4a"},
-  {id:6, jp:"今からマスクを少し下げます。", en:"Let me lower your mask now.", src:"audio/nitro06.m4a"},
-  {id:7, jp:"口を開けて、舌を上げてください。", en:"Please open your mouth and lift your tongue.", src:"audio/nitro07.m4a"},
-  {id:8, jp:"錠剤を飲み込まないでください。", en:"Please don't swallow the tablet.", src:"audio/nitro08.m4a"},
-  {id:9, jp:"飴のように、舌の上で溶かしてください。", en:"Let it dissolve like a candy on your tongue.", src:"audio/nitro09.m4a"},
-  {id:10, jp:"薬が溶けたら教えてください。", en:"Please let me know when the medicine has dissolved.", src:"audio/nitro10.m4a"},
-  {id:11, jp:"溶けましたか？まだ舌の下に残っていますか？", en:"Has it dissolved? Is it still there under your tongue?", src:"audio/nitro11.m4a"}
-];
-
-const sel = document.getElementById('sel');
-const jp = document.getElementById('jp');
-const en = document.getElementById('en');
-const audio = document.getElementById('audio');
-const audioSrc = document.getElementById('audioSrc');
-const status = document.getElementById('status');
-
-const playBtn = document.getElementById('play');
-const pauseBtn = document.getElementById('pause');
-const replayBtn = document.getElementById('replay');
-const prevBtn = document.getElementById('prev');
-const nextBtn = document.getElementById('next');
-
-DATA.forEach(item => {
-  const opt = document.createElement('option');
-  opt.value = item.id;
-  opt.textContent = String(item.id).padStart(2,'0') + ". " + item.jp;
-  sel.appendChild(opt);
+const STEPS=['step_01', 'step_02', 'step_03', 'step_04', 'step_05', 'step_06', 'step_07', 'step_08', 'step_09', 'step_10'];
+const JPS=['ニトロペンを舌の下に入れてください。溶けるまで噛まずにそのままにしてください。', 'ニトロペンを舌の下に入れてください。溶けるまで噛まずにそのままにしてください。', 'ニトロペンを舌の下に入れてください。溶けるまで噛まずにそのままにしてください。', 'ニトロペンを舌の下に入れてください。溶けるまで噛まずにそのままにしてください。', 'ニトロペンを舌の下に入れてください。溶けるまで噛まずにそのままにしてください。', 'ニトロペンを舌の下に入れてください。溶けるまで噛まずにそのままにしてください。', 'ニトロペンを舌の下に入れてください。溶けるまで噛まずにそのままにしてください。', 'ニトロペンを舌の下に入れてください。溶けるまで噛まずにそのままにしてください。', 'ニトロペンを舌の下に入れてください。溶けるまで噛まずにそのままにしてください。', 'ニトロペンを舌の下に入れてください。溶けるまで噛まずにそのままにしてください。'];
+const sel=document.getElementById('sel'),
+jp=document.getElementById('jp'),
+en=document.getElementById('en'),
+player=document.getElementById('player'),
+status=document.getElementById('status');
+STEPS.forEach((s,i)=>{
+ const o=document.createElement('option');
+ o.value=i;
+ o.textContent=`${String(i+1).padStart(2,'0')}｜${JPS[i]}`;
+ sel.appendChild(o);
 });
-
-function load(id){
-  const item = DATA.find(x => x.id === Number(id));
-  jp.textContent = item.jp;
-  en.textContent = item.en;
-  audioSrc.src = item.src; // sourceにセット
-  audio.load();            // ★iPhone Safari 必須
-  status.textContent = "待機中 / Ready";
-  sel.value = String(item.id);
+let idx=0;
+function load(i){
+ idx=Math.max(0,Math.min(STEPS.length-1,i));
+ sel.value=idx;
+ jp.textContent=JPS[idx];
+ en.textContent=STEPS[idx];
+ player.src=`audio/step_${String(idx+1).padStart(2,'0')}.m4a`;
+ status.textContent="待機中 / Ready";
 }
-
-sel.addEventListener('change', e => load(e.target.value));
-
-async function play(){
-  try{
-    await audio.play();
-    status.textContent = "再生中 / Playing";
-  }catch(e){
-    status.textContent = "再生できませんでした";
-  }
-}
-
-playBtn.addEventListener('click', play);
-pauseBtn.addEventListener('click', () => { audio.pause(); status.textContent = "一時停止 / Paused"; });
-replayBtn.addEventListener('click', async () => { audio.currentTime = 0; await play(); });
-
-prevBtn.addEventListener('click', () => load(Math.max(1, Number(sel.value)-1)));
-nextBtn.addEventListener('click', () => load(Math.min(DATA.length, Number(sel.value)+1)));
-
-audio.addEventListener('ended', () => status.textContent = "再生終了 / Finished");
-
-// 初期化
-load(1);
+sel.onchange=()=>load(parseInt(sel.value));
+document.getElementById('prev').onclick=()=>load(idx-1);
+document.getElementById('next').onclick=()=>load(idx+1);
+document.getElementById('play').onclick=()=>player.play();
+document.getElementById('pause').onclick=()=>player.pause();
+document.getElementById('replay').onclick=()=>{player.currentTime=0;player.play();};
+player.onplay=()=>status.textContent="再生中 / Playing";
+player.onpause=()=>status.textContent="一時停止 / Paused";
+player.onended=()=>status.textContent="待機中 / Ready";
+load(0);
 </script>
 </body>
 </html>
